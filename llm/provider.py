@@ -11,10 +11,23 @@ Classes:
 import asyncio
 import json
 import logging
+import time
 from typing import Any, Optional, Tuple, Set
 import json_repair
 
 logger = logging.getLogger(__name__)
+
+# Global rate limiter: tracks last request time per base_url to respect RPM limits
+_rate_limit_locks: dict = {}
+_rate_limit_state: dict = {}
+
+
+def _get_rate_limiter(provider_id: str, rpm: int = 20):
+    """Get or create a rate limiter for a provider."""
+    if provider_id not in _rate_limit_locks:
+        _rate_limit_locks[provider_id] = asyncio.Lock()
+        _rate_limit_state[provider_id] = {"last_time": 0.0, "min_interval": 60.0 / rpm}
+    return _rate_limit_locks[provider_id], _rate_limit_state[provider_id]
 
 MODELS_WITH_MAX_COMPLETION_TOKENS: Set[str] = {
     "o1-preview", "o1-mini", "o4-mini", "o3-mini", "o3", 
@@ -33,6 +46,8 @@ class LLMProvider:
         client: The LLM client instance (e.g., AsyncAzureOpenAI)
         deployment_name: Name of the model deployment
         provider_type: Type of provider ('azure', 'openai', etc.)
+        temperature: Temperature for generation (None = use model default)
+        is_thinking_model: Whether this model returns reasoning_content
         
     Example:
         >>> from openai import AsyncAzureOpenAI
@@ -45,7 +60,9 @@ class LLMProvider:
         self, 
         client: Any, 
         deployment_name: str, 
-        provider_type: str = "azure"
+        provider_type: str = "azure",
+        temperature: Optional[float] = None,
+        is_thinking_model: bool = False,
     ) -> None:
         """Initialize the LLM provider.
         
@@ -53,10 +70,15 @@ class LLMProvider:
             client: The LLM client instance for API calls
             deployment_name: Name of the model deployment to use
             provider_type: Type of provider, defaults to 'azure'
+            temperature: Temperature for generation (None = model default)
+            is_thinking_model: If True, captures reasoning_content from response
         """
         self.client = client
         self.deployment_name: str = deployment_name
         self.provider_type: str = provider_type
+        self.temperature: Optional[float] = temperature
+        self.is_thinking_model: bool = is_thinking_model
+        self.last_reasoning_content: Optional[str] = None
 
     def _is_token_limit_error(self, error_message: str) -> bool:
         """Check if the error is related to token limits.
@@ -161,14 +183,35 @@ class LLMProvider:
         else:
             params["max_tokens"] = max_tokens
         
+        if self.temperature is not None:
+            params["temperature"] = self.temperature
+        
         # Simple retry mechanism: 3 attempts with exponential backoff
         max_attempts = 3
         for attempt in range(max_attempts):
             try:
+                # Rate limiting: wait if needed to respect RPM
+                lock, state = _get_rate_limiter(self.deployment_name)
+                async with lock:
+                    now = time.monotonic()
+                    elapsed = now - state["last_time"]
+                    if elapsed < state["min_interval"]:
+                        wait = state["min_interval"] - elapsed
+                        logger.debug(f"Rate limiting: waiting {wait:.1f}s for {self.deployment_name}")
+                        await asyncio.sleep(wait)
+                    state["last_time"] = time.monotonic()
+                
                 logger.info(f"Generating completion using {self.deployment_name} (attempt {attempt + 1}/{max_attempts}, max_tokens: {max_tokens})")
                 
                 response = await self.client.chat.completions.create(**params)
-                content = response.choices[0].message.content
+                message = response.choices[0].message
+                content = message.content
+                
+                # Capture reasoning_content from thinking models (e.g., kimi-k2.5)
+                reasoning = getattr(message, "reasoning_content", None)
+                if reasoning:
+                    self.last_reasoning_content = reasoning
+                    logger.debug(f"Captured reasoning_content ({len(reasoning)} chars)")
                 
                 if content is None or content.strip() == "":
                     raise ValueError("Empty content received from LLM")

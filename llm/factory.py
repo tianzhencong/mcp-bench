@@ -294,6 +294,20 @@ class LLMFactory:
                 model_name="google/gemini-2.5-pro"
             )
         
+        # Moonshot Kimi models
+        kimi_api_key = os.getenv("KIMI_API_KEY")
+        kimi_base_url = os.getenv("KIMI_BASE_URL", "https://api.moonshot.cn/v1")
+        if kimi_api_key:
+            configs["kimi-k2.5"] = ModelConfig(
+                name="kimi-k2.5",
+                provider_type="openai_compatible",
+                api_key=kimi_api_key,
+                base_url=kimi_base_url,
+                model_name="kimi-k2.5",
+                temperature=1,
+                is_thinking_model=True,
+            )
+
         # Llama models
         llama_models = [
             ("llama-4-maverick", "LLAMA_4_MAVERICK"),
@@ -354,7 +368,9 @@ class LLMFactory:
             return LLMProvider(
                 client=client,
                 deployment_name=model_config.config["model_name"],
-                provider_type="openai_compatible"
+                provider_type="openai_compatible",
+                temperature=model_config.config.get("temperature"),
+                is_thinking_model=model_config.config.get("is_thinking_model", False),
             )
         elif model_config.provider_type == "openrouter":
             client = AsyncOpenAI(

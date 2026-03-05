@@ -430,12 +430,17 @@ class BenchmarkRunner:
         
         # Initialize judge provider once for this task execution
         if not hasattr(self, '_judge_provider') or self._judge_provider is None:
-            azure_client = AsyncAzureOpenAI(
-                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-                api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                api_version=config_loader.get_azure_api_version()
-            )
-            self._judge_provider = LLMProvider(azure_client, "o4-mini", "azure")
+            if os.getenv("AZURE_OPENAI_API_KEY") and os.getenv("AZURE_OPENAI_ENDPOINT"):
+                azure_client = AsyncAzureOpenAI(
+                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+                    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                    api_version=config_loader.get_azure_api_version()
+                )
+                self._judge_provider = LLMProvider(azure_client, "o4-mini", "azure")
+            else:
+                # Fallback: use the same model as the agent for judging
+                logger.warning("Azure OpenAI not configured for judge. Using agent model as judge.")
+                self._judge_provider = llm_provider
         
         # Step 1: Prepare task execution information
         task_execution_info = await self._prepare_task_execution(task_info)
