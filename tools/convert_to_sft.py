@@ -87,7 +87,14 @@ def convert_trajectory(traj_path: str, reasoning_mode: str = "strip") -> dict:
     messages = traj.get("messages", [])
     cleaned_messages = [clean_message_for_sft(m, reasoning_mode) for m in messages]
 
-    return {"messages": cleaned_messages}
+    result = {"messages": cleaned_messages}
+
+    # Include tools definition if available
+    tools = traj.get("tools", [])
+    if tools:
+        result["tools"] = tools
+
+    return result
 
 
 def convert_all(

@@ -192,6 +192,7 @@ async def run_single_task(
             "task_id": task_id,
             "model": agent.model,
             "messages": agent_result["messages"],
+            "tools": agent_result.get("tools", []),
             "reasoning_traces": agent_result["reasoning_traces"],
             "metadata": {
                 "server_name": server_name,

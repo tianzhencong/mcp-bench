@@ -270,6 +270,7 @@ class OpenClawAgent:
 
         return {
             "messages": messages,
+            "tools": openai_tools,
             "solution": solution,
             "execution_results": execution_results,
             "total_rounds": round_num,
