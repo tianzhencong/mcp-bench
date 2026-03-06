@@ -890,10 +890,10 @@ class LLMJudge:
             dependency_awareness = result.get('dependency_awareness')
             parallelism_and_efficiency = result.get('parallelism_and_efficiency')
             
-            # Calculate aggregate scores (2 scores per category)
-            task_completion_scores = [task_fulfillment, grounding]
-            tool_selection_scores = [tool_appropriateness, parameter_accuracy]
-            planning_scores = [dependency_awareness, parallelism_and_efficiency]
+            # Calculate aggregate scores (2 scores per category), filtering out None values
+            task_completion_scores = [s for s in [task_fulfillment, grounding] if s is not None]
+            tool_selection_scores = [s for s in [tool_appropriateness, parameter_accuracy] if s is not None]
+            planning_scores = [s for s in [dependency_awareness, parallelism_and_efficiency] if s is not None]
             
             task_completion_score = sum(task_completion_scores) / len(task_completion_scores) if task_completion_scores else 0
             tool_selection_score = sum(tool_selection_scores) / len(tool_selection_scores) if tool_selection_scores else 0
