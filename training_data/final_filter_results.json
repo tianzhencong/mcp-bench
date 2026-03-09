@@ -1,0 +1,23 @@
+{
+  "total": 7,
+  "stage1_passed": 3,
+  "stage2_passed": 3,
+  "min_judge_score": 4.0,
+  "passed_trajectories": [
+    {
+      "file": "traj_time_mcp_000_20260305_094337.json",
+      "task_id": "time_mcp_000",
+      "judge_avg": 4.75
+    },
+    {
+      "file": "traj_wikipedia_paper_search_001_20260305_095943.json",
+      "task_id": "wikipedia_paper_search_001",
+      "judge_avg": 4.5
+    },
+    {
+      "file": "traj_wikipedia_paper_search_003_20260305_101118.json",
+      "task_id": "wikipedia_paper_search_003",
+      "judge_avg": 5.5
+    }
+  ]
+}

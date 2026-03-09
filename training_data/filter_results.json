@@ -1,0 +1,455 @@
+{
+  "total": 7,
+  "passed": 3,
+  "failed": 4,
+  "reports": [
+    {
+      "file": "traj_metropolitan_museum_wikipedia_000_20260305_085405.json",
+      "task_id": "metropolitan_museum_wikipedia_000",
+      "metrics": {
+        "total_rounds": 10,
+        "total_tool_calls": 61,
+        "total_tool_results": 61,
+        "success_results": 56,
+        "error_results": 5,
+        "success_rate": 0.918,
+        "has_final_answer": false,
+        "final_answer_length": 0,
+        "has_tools_definition": false,
+        "tools_count": 0,
+        "max_tool_result_length": 5843,
+        "avg_tool_result_length": 455,
+        "total_messages": 73,
+        "token_usage": {
+          "prompt_tokens": 78917,
+          "completion_tokens": 4043,
+          "total_tokens": 82960
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 61,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 0.918,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": false,
+          "value": false,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": false,
+          "value": 0,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 10,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": false,
+          "value": 0,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "61 calls, 61 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": false,
+      "pass_count": 4,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_openapi_explorer_001_20260305_092002.json",
+      "task_id": "openapi_explorer_001",
+      "metrics": {
+        "total_rounds": 4,
+        "total_tool_calls": 28,
+        "total_tool_results": 28,
+        "success_results": 28,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": true,
+        "final_answer_length": 10848,
+        "has_tools_definition": false,
+        "tools_count": 0,
+        "max_tool_result_length": 30000,
+        "avg_tool_result_length": 30000,
+        "total_messages": 34,
+        "token_usage": {
+          "prompt_tokens": 253972,
+          "completion_tokens": 4964,
+          "total_tokens": 258936
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 28,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": true,
+          "value": true,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": true,
+          "value": 10848,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 4,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": false,
+          "value": 0,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "28 calls, 28 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": false,
+      "pass_count": 6,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_time_mcp_000_20260305_094337.json",
+      "task_id": "time_mcp_000",
+      "metrics": {
+        "total_rounds": 2,
+        "total_tool_calls": 9,
+        "total_tool_results": 9,
+        "success_results": 9,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": true,
+        "final_answer_length": 1892,
+        "has_tools_definition": true,
+        "tools_count": 2,
+        "max_tool_result_length": 263,
+        "avg_tool_result_length": 260,
+        "total_messages": 13,
+        "token_usage": {
+          "prompt_tokens": 2688,
+          "completion_tokens": 1573,
+          "total_tokens": 4261
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 9,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": true,
+          "value": true,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": true,
+          "value": 1892,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 2,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": true,
+          "value": 2,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "9 calls, 9 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": true,
+      "pass_count": 7,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_unit_converter_000_20260305_081230.json",
+      "task_id": "unit_converter_000",
+      "metrics": {
+        "total_rounds": 1,
+        "total_tool_calls": 14,
+        "total_tool_results": 14,
+        "success_results": 14,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": false,
+        "final_answer_length": 0,
+        "has_tools_definition": false,
+        "tools_count": 0,
+        "max_tool_result_length": 458,
+        "avg_tool_result_length": 402,
+        "total_messages": 17,
+        "token_usage": {
+          "prompt_tokens": 4636,
+          "completion_tokens": 820,
+          "total_tokens": 5456
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 14,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": false,
+          "value": false,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": false,
+          "value": 0,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 1,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": false,
+          "value": 0,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "14 calls, 14 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": false,
+      "pass_count": 4,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_unit_converter_000_20260305_081715.json",
+      "task_id": "unit_converter_000",
+      "metrics": {
+        "total_rounds": 3,
+        "total_tool_calls": 24,
+        "total_tool_results": 24,
+        "success_results": 24,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": true,
+        "final_answer_length": 10056,
+        "has_tools_definition": false,
+        "tools_count": 0,
+        "max_tool_result_length": 458,
+        "avg_tool_result_length": 335,
+        "total_messages": 29,
+        "token_usage": {
+          "prompt_tokens": 20862,
+          "completion_tokens": 4663,
+          "total_tokens": 25525
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 24,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": true,
+          "value": true,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": true,
+          "value": 10056,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 3,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": false,
+          "value": 0,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "24 calls, 24 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": false,
+      "pass_count": 6,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_wikipedia_paper_search_001_20260305_095943.json",
+      "task_id": "wikipedia_paper_search_001",
+      "metrics": {
+        "total_rounds": 7,
+        "total_tool_calls": 30,
+        "total_tool_results": 30,
+        "success_results": 30,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": true,
+        "final_answer_length": 17184,
+        "has_tools_definition": true,
+        "tools_count": 30,
+        "max_tool_result_length": 30000,
+        "avg_tool_result_length": 17057,
+        "total_messages": 39,
+        "token_usage": {
+          "prompt_tokens": 498558,
+          "completion_tokens": 6582,
+          "total_tokens": 505140
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 30,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": true,
+          "value": true,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": true,
+          "value": 17184,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 7,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": true,
+          "value": 30,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "30 calls, 30 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": true,
+      "pass_count": 7,
+      "total_checks": 7
+    },
+    {
+      "file": "traj_wikipedia_paper_search_003_20260305_101118.json",
+      "task_id": "wikipedia_paper_search_003",
+      "metrics": {
+        "total_rounds": 8,
+        "total_tool_calls": 21,
+        "total_tool_results": 21,
+        "success_results": 21,
+        "error_results": 0,
+        "success_rate": 1.0,
+        "has_final_answer": true,
+        "final_answer_length": 14340,
+        "has_tools_definition": true,
+        "tools_count": 30,
+        "max_tool_result_length": 30000,
+        "avg_tool_result_length": 4258,
+        "total_messages": 31,
+        "token_usage": {
+          "prompt_tokens": 150110,
+          "completion_tokens": 5850,
+          "total_tokens": 155960
+        }
+      },
+      "checks": {
+        "has_tool_calls": {
+          "pass": true,
+          "value": 21,
+          "rule": "total_tool_calls > 0"
+        },
+        "success_rate": {
+          "pass": true,
+          "value": 1.0,
+          "rule": "success_rate >= 0.7"
+        },
+        "has_final_answer": {
+          "pass": true,
+          "value": true,
+          "rule": "has_final_answer == True"
+        },
+        "final_answer_quality": {
+          "pass": true,
+          "value": 14340,
+          "rule": "final_answer_length >= 100"
+        },
+        "not_looping": {
+          "pass": true,
+          "value": 8,
+          "rule": "total_rounds <= 20"
+        },
+        "has_tools_def": {
+          "pass": true,
+          "value": 30,
+          "rule": "tools definition present in trajectory"
+        },
+        "calls_results_match": {
+          "pass": true,
+          "value": "21 calls, 21 results",
+          "rule": "tool_calls ≈ tool_results (within 2)"
+        }
+      },
+      "all_passed": true,
+      "pass_count": 7,
+      "total_checks": 7
+    }
+  ]
+}

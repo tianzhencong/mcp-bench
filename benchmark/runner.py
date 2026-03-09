@@ -22,7 +22,7 @@ import sys
 import time
 import argparse
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Callable
 
 # Add parent directory to Python path to resolve imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -180,7 +180,8 @@ class BenchmarkRunner:
         local_config_loader: Optional[LocalServerConfigLoader] = None,
         aggregator: Optional[ResultsAggregator] = None,
         formatter: Optional[ResultsFormatter] = None,
-        judge_provider: Optional[Any] = None
+        judge_provider: Optional[Any] = None,
+        executor_factory: Optional[Callable] = None
     ) -> None:
         # Use config file defaults if not explicitly provided
         self.tasks_file = tasks_file or config_loader.get_tasks_file()
@@ -189,6 +190,7 @@ class BenchmarkRunner:
         self.local_config_loader = local_config_loader or LocalServerConfigLoader()
         self.model_configs = LLMFactory.get_model_configs()
         self._judge_provider = judge_provider  # Store injected judge provider
+        self._executor_factory = executor_factory  # Pluggable executor (None = default TaskExecutor)
         
         # Use config file defaults for feature flags
         self.enable_distraction_servers = enable_distraction_servers if enable_distraction_servers is not None else True
@@ -428,12 +430,17 @@ class BenchmarkRunner:
         
         # Initialize judge provider once for this task execution
         if not hasattr(self, '_judge_provider') or self._judge_provider is None:
-            azure_client = AsyncAzureOpenAI(
-                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-                api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                api_version=config_loader.get_azure_api_version()
-            )
-            self._judge_provider = LLMProvider(azure_client, "o4-mini", "azure")
+            if os.getenv("AZURE_OPENAI_API_KEY") and os.getenv("AZURE_OPENAI_ENDPOINT"):
+                azure_client = AsyncAzureOpenAI(
+                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+                    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                    api_version=config_loader.get_azure_api_version()
+                )
+                self._judge_provider = LLMProvider(azure_client, "o4-mini", "azure")
+            else:
+                # Fallback: use the same model as the agent for judging
+                logger.warning("Azure OpenAI not configured for judge. Using agent model as judge.")
+                self._judge_provider = llm_provider
         
         # Step 1: Prepare task execution information
         task_execution_info = await self._prepare_task_execution(task_info)
@@ -485,12 +492,15 @@ class BenchmarkRunner:
                                 'execution_time': time.time() - start_time
                             }
                     
-                    # Create executor and execute task
-                    executor = TaskExecutor(
-                        llm_provider, 
-                        conn_mgr.server_manager, 
-                        self.concurrent_summarization
-                    )
+                    # Create executor (use injected factory or default TaskExecutor)
+                    if self._executor_factory is not None:
+                        executor = self._executor_factory(
+                            llm_provider, conn_mgr.server_manager, self.concurrent_summarization
+                        )
+                    else:
+                        executor = TaskExecutor(
+                            llm_provider, conn_mgr.server_manager, self.concurrent_summarization
+                        )
                     
                     
                     task_execution_start_time = time.time()
